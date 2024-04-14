@@ -75,14 +75,6 @@ search_container.appendChild(search_results)
 shadow.appendChild(search_container)
 document.body.appendChild(shadow_container)
 
-// Open search listener
-document.addEventListener("keydown", (e) => {
-    if (e.key === "b" && e.metaKey && search_container.hidden) {
-        search_container.hidden = false
-        search_input.focus()
-        e.preventDefault()
-    }
-})
 
 // Filter and render bookmarks
 let bookmarks = []
@@ -111,6 +103,15 @@ function render_results() {
     })
     search_results.hidden = bookmarks.length == 0
 }
+
+// Open search listener
+document.addEventListener("keydown", (e) => {
+    if (e.key === "b" && e.ctrlKey && search_container.hidden) {
+        search_container.hidden = false
+        search_input.focus()
+        e.preventDefault()
+    }
+})
 
 // Input handling
 search_input.addEventListener("keydown", (e) => {
