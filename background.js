@@ -18,6 +18,7 @@ function parse_bookmark_tree(tree) {
 }
 function index_bookmarks() {
     chrome.bookmarks.getTree((tree) => {
+        all_bookmarks = new Array()
         parse_bookmark_tree(tree[0])
         fuse = new Fuse(all_bookmarks, {
             keys: ["name"],
@@ -55,6 +56,18 @@ chrome.runtime.onMessage.addListener(function(obj, sender, response) {
 index_bookmarks()
 // Parse on updated bookmars
 chrome.bookmarks.onChanged.addListener((_id, _info) => {
+    index_bookmarks()
+})
+chrome.bookmarks.onChildrenReordered.addListener((_id, _info) => {
+    index_bookmarks()
+})
+chrome.bookmarks.onCreated.addListener((_id, _info) => {
+    index_bookmarks()
+})
+chrome.bookmarks.onMoved.addListener((_id, _info) => {
+    index_bookmarks()
+})
+chrome.bookmarks.onRemoved.addListener((_id, _info) => {
     index_bookmarks()
 })
 
