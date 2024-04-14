@@ -146,12 +146,11 @@ search_input.addEventListener("keydown", (e) => {
 })
 
 search_input.addEventListener("keyup", (e) => {
-
-    console.log(e.key, e.shiftKey)
     if (
         e.key === "Control" ||
         e.key === "Shift" ||
         e.key === "Tab" ||
+        e.key === "Enter" ||
         (e.key === "Tab" && e.shiftKey) ||
         (e.key === "j" && e.ctrlKey) ||
         (e.key === "k" && e.ctrlKey)

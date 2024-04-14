@@ -57,3 +57,7 @@ index_bookmarks()
 chrome.bookmarks.onChanged.addListener((_id, _info) => {
     index_bookmarks()
 })
+
+// chrome.tabs.query({}).then((v) => {
+//     console.log(v)
+// })
