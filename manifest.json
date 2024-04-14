@@ -1,0 +1,21 @@
+{
+    "manifest_version": 3,
+    "name": "Search",
+    "description": "Search bookmarks and tabs",
+    "version": "0.1.0",
+    "host_permissions":["*://*/*"],
+    "permissions": [
+        "bookmarks", 
+        "tabs"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["*://*/*"],
+            "css": ["content.css"],
+            "js": ["content.js"]
+        }
+    ]
+}
