@@ -106,6 +106,11 @@ function render_results() {
 
 // Open search listener
 document.addEventListener("keydown", (e) => {
+    if (!search_container.hidden) {
+        e.stopPropagation()
+        e.stopImmediatePropagation()
+    }
+
     if (e.key === "b" && e.ctrlKey && search_container.hidden) {
         search_container.hidden = false
         search_input.focus()
@@ -115,6 +120,9 @@ document.addEventListener("keydown", (e) => {
 
 // Input handling
 search_input.addEventListener("keydown", (e) => {
+    e.stopPropagation()
+    e.stopImmediatePropagation()
+
     // Scroll through bookmarks
     let down = (e.key === "Tab" && !e.shiftKey) || (e.key === "j" && e.ctrlKey)
     let up = (e.key === "Tab" && e.shiftKey) || (e.key === "k" && e.ctrlKey)
@@ -128,24 +136,25 @@ search_input.addEventListener("keydown", (e) => {
         }
         focused_element %= bookmarks.length
         render_results()
-        e.preventDefault();
-        return
+        e.preventDefault()
     }
+
     // Choose bookmark
     if (e.key === "Enter") {
         let bookmark = bookmarks[focused_element]
         window.location.href = bookmark.url
-        return
     }
 
     // Quit search
     if (e.key === "Escape") {
         document.activeElement.blur();
-        return
     }
 })
 
 search_input.addEventListener("keyup", (e) => {
+    e.stopPropagation()
+    e.stopImmediatePropagation()
+
     if (
         e.key === "Control" ||
         e.key === "Shift" ||
@@ -160,6 +169,11 @@ search_input.addEventListener("keyup", (e) => {
 
     // Filter bookmarks
     filter_bookmarks(e.target.value)
+})
+
+search_input.addEventListener("keypress", (e) => {
+    e.stopPropagation()
+    e.stopImmediatePropagation()
 })
 
 // Initally filter with empty string
