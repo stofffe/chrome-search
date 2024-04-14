@@ -1,5 +1,8 @@
-// Parse bookmarks from tree
+importScripts("fuzzy.js")
+
+// Index bookmarks from tree
 let all_bookmarks = new Array()
+let fuse = null
 function parse_bookmark_tree(tree) {
     let children = tree.children
     if (children) {
@@ -13,24 +16,29 @@ function parse_bookmark_tree(tree) {
         })
     }
 }
-chrome.bookmarks.getTree((tree) => {
-    parse_bookmark_tree(tree[0])
-    console.log(all_bookmarks)
-})
-chrome.bookmarks.onChanged.addListener((_id, _info) => {
+function index_bookmarks() {
     chrome.bookmarks.getTree((tree) => {
         parse_bookmark_tree(tree[0])
-        console.log(all_bookmarks)
+        fuse = new Fuse(all_bookmarks, {
+            keys: ["name"],
+            includeScore: true,
+        })
     })
-})
+}
+
+// Fuzzy search 
+const MATCH_LIMIT = 0.5
+function fuzzy_search(query) {
+    return fuse.search(query)
+        .filter(b => b.score <= MATCH_LIMIT)
+        .map(b => b.item)
+}
 
 // Filter bookmarks and send back
 chrome.runtime.onMessage.addListener(function(obj, sender, response) {
     let query = obj.query
 
-    let bookmarks = all_bookmarks.filter(b => {
-        return b.name.toLowerCase().includes(query.toLowerCase())
-    })
+    let bookmarks = fuzzy_search(query)
 
     if (query != "") {
         response({
@@ -42,3 +50,10 @@ chrome.runtime.onMessage.addListener(function(obj, sender, response) {
         })
     }
 });
+
+// Inital parse
+index_bookmarks()
+// Parse on updated bookmars
+chrome.bookmarks.onChanged.addListener((_id, _info) => {
+    index_bookmarks()
+})

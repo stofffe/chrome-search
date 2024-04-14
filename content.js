@@ -54,6 +54,7 @@ shadow.adoptedStyleSheets = [style]
 
 // Search input
 let search_input = document.createElement("input")
+search_input.type = "text"
 search_input.id = "search-input"
 search_input.addEventListener("focusout", () => {
     search_container.hidden = true
@@ -129,10 +130,6 @@ search_input.addEventListener("keydown", (e) => {
         e.preventDefault();
         return
     }
-    if (e.shiftKey || e.ctrlKey) {
-        return
-    }
-
     // Choose bookmark
     if (e.key === "Enter") {
         let bookmark = bookmarks[focused_element]
@@ -143,6 +140,21 @@ search_input.addEventListener("keydown", (e) => {
     // Quit search
     if (e.key === "Escape") {
         document.activeElement.blur();
+        return
+    }
+})
+
+search_input.addEventListener("keyup", (e) => {
+
+    console.log(e.key, e.shiftKey)
+    if (
+        e.key === "Control" ||
+        e.key === "Shift" ||
+        e.key === "Tab" ||
+        (e.key === "Tab" && e.shiftKey) ||
+        (e.key === "j" && e.ctrlKey) ||
+        (e.key === "k" && e.ctrlKey)
+    ) {
         return
     }
 
