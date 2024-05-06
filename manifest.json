@@ -6,6 +6,7 @@
     "host_permissions":["*://*/*"],
     "permissions": [
         "bookmarks", 
+        "history",
         "tabs"
     ],
     "background": {

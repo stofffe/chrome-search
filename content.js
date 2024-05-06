@@ -75,24 +75,32 @@ search_container.appendChild(search_results)
 shadow.appendChild(search_container)
 document.body.appendChild(shadow_container)
 
+// Constants
+const BOOKMARK = "bookmark";
+const HISTORY = "history"
+const NONE = ""
 
-// Filter and render bookmarks
-let bookmarks = []
-function filter_bookmarks(query) {
+// Global variables
+let global_results = []
+let global_source = NONE
+
+// Filter and render results
+function filter_bookmarks(query, source) {
     chrome.runtime.sendMessage(
         {
-            query: query
+            query: query,
+            source: source,
         },
         function(response) {
             focused_element = 0
-            bookmarks = response.bookmarks
+            global_results = response.results
             render_results()
         }
     );
 }
 function render_results() {
     search_results.innerHTML = ""
-    bookmarks.forEach((b, i) => {
+    global_results.forEach((b, i) => {
         let result = document.createElement("div")
         result.id = "search-result"
         result.textContent = b.name
@@ -101,8 +109,9 @@ function render_results() {
         }
         search_results.appendChild(result)
     })
-    search_results.hidden = bookmarks.length == 0
+    search_results.hidden = global_results.length == 0
 }
+
 
 // Open search listener
 document.addEventListener("keydown", (e) => {
@@ -112,6 +121,14 @@ document.addEventListener("keydown", (e) => {
     }
 
     if (e.key === "b" && e.ctrlKey && search_container.hidden) {
+        global_source = BOOKMARK
+        search_container.hidden = false
+        search_input.focus()
+        e.preventDefault()
+    }
+
+    if (e.key === "h" && e.ctrlKey && search_container.hidden) {
+        global_source = HISTORY
         search_container.hidden = false
         search_input.focus()
         e.preventDefault()
@@ -123,7 +140,7 @@ search_input.addEventListener("keydown", (e) => {
     e.stopPropagation()
     e.stopImmediatePropagation()
 
-    // Scroll through bookmarks
+    // Scroll through results
     let down = (e.key === "Tab" && !e.shiftKey) || (e.key === "j" && e.ctrlKey)
     let up = (e.key === "Tab" && e.shiftKey) || (e.key === "k" && e.ctrlKey)
     let scroll = down || up
@@ -131,18 +148,18 @@ search_input.addEventListener("keydown", (e) => {
         if (down) {
             focused_element += 1
         } else {
-            focused_element += bookmarks.length
+            focused_element += global_results.length
             focused_element -= 1
         }
-        focused_element %= bookmarks.length
+        focused_element %= global_results.length
         render_results()
         e.preventDefault()
     }
 
-    // Choose bookmark
+    // Choose result
     if (e.key === "Enter") {
-        let bookmark = bookmarks[focused_element]
-        window.location.href = bookmark.url
+        let result = global_results[focused_element]
+        window.location.href = result.url
     }
 
     // Quit search
@@ -167,8 +184,8 @@ search_input.addEventListener("keyup", (e) => {
         return
     }
 
-    // Filter bookmarks
-    filter_bookmarks(e.target.value)
+    // Filter results
+    filter_bookmarks(e.target.value, global_source)
 })
 
 search_input.addEventListener("keypress", (e) => {
@@ -177,4 +194,4 @@ search_input.addEventListener("keypress", (e) => {
 })
 
 // Initally filter with empty string
-filter_bookmarks("")
+filter_bookmarks("", "")
