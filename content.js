@@ -98,6 +98,9 @@ const BOOKMARK = "bookmark";
 const HISTORY = "history"
 const NONE = ""
 
+const TITLE_MAX_LENGTH = 100
+const URL_MAX_LENGTH = 100
+
 // Global variables
 let global_results = []
 let global_source = NONE
@@ -128,13 +131,13 @@ function render_results() {
 
         let title = document.createElement("div")
         title.id = "search-title"
-        title.textContent = b.name
+        title.textContent = b.name.slice(0, TITLE_MAX_LENGTH)
         result.appendChild(title)
 
         if (global_source == HISTORY) {
             let url = document.createElement("div")
             url.id = "search-url"
-            url.textContent = b.url
+            url.textContent = b.url.slice(0, URL_MAX_LENGTH)
             result.appendChild(url)
         }
     })
@@ -222,4 +225,4 @@ search_input.addEventListener("keypress", (e) => {
 })
 
 // Initally filter with empty string
-filter_bookmarks("", "")
+// filter_bookmarks("", "")

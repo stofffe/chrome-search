@@ -3,7 +3,6 @@ const HISTORY = "history"
 const NONE = ""
 
 const MATCH_LIMIT = 0.5
-const URL_MAX_LENGTH = 100
 
 // Fuzzy search 
 function fuzzy_search(fuse, query) {
@@ -35,10 +34,6 @@ chrome.runtime.onMessage.addListener(function(obj, _sender, respond) {
         default:
             console.log("UNSUPPORTED source", source)
             break
-    }
-
-    for (i in results) {
-        results[i].url = results[i].url.slice(1, URL_MAX_LENGTH)
     }
 
     respond({
