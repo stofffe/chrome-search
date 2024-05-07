@@ -5,11 +5,9 @@ function parse_history(history) {
     history_list = history.map(a => {
         return {
             name: a.title,
-            url: a.url
+            url: a.url,
         }
     })
-    console.log(history)
-    // console.log(history_list)
 }
 
 function index_history() {
@@ -19,12 +17,11 @@ function index_history() {
             history_list = new Array()
             parse_history(results)
             history_fuse = new Fuse(history_list, {
-                keys: ["name"],
+                keys: ["name", "url"],
                 includeScore: true,
             })
         }
     )
-
 }
 
 index_history()

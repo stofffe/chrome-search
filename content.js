@@ -1,17 +1,18 @@
+//
 // Css
+//
+
 let style = new CSSStyleSheet()
-style.insertRule(`
-    #search-container {
+let css_rules = [
+    `#search-container {
         position: fixed;
         top: 4vh;
         width: 80vw;
         left: 50%;
         transform: translateX(-50%);
         z-index: 999999999999999;
-    }
-`)
-style.insertRule(`
-    #search-input {
+    }`,
+    ` #search-input {
         color: black;
         font-size: 1em;
         background-color: white;
@@ -20,10 +21,8 @@ style.insertRule(`
         border-color: black;
         border: 1px solid #000000;
         border-radius: 10px;
-    }
-`)
-style.insertRule(`
-    #search-results {
+    }`,
+    `#search-results {
         color: black;
         font-size: 1em;
         background-color: white;
@@ -32,20 +31,33 @@ style.insertRule(`
         border: 1px solid #000000;
         border-radius: 10px;
         padding: 10px;
-    }
-`)
-style.insertRule(`
-    #search-result {
+    }`,
+    `#search-result {
         padding: 10px;
-    }
-`)
-style.insertRule(`
-    #search-result[active] {
+    }`,
+    ` #search-result[active] {
         padding: 10px;
         background-color: lightgray;
         border-radius: 5px;
+    }`,
+    `#search-title {
+        font-size: 1rem;
+        overflow-wrap: break-word;
+    }`,
+    `#search-url {
+        font-size: 0.7rem;
+        color: gray;
+        overflow-wrap: break-word;
     }
-`)
+`,
+]
+for (i in css_rules) {
+    style.insertRule(css_rules[i])
+}
+
+//
+// DOM elements
+//
 
 // Shadow
 let shadow_container = document.createElement("div")
@@ -58,6 +70,8 @@ search_input.type = "text"
 search_input.id = "search-input"
 search_input.addEventListener("focusout", () => {
     search_container.hidden = true
+    search_input.value = ""
+    search_results.innerHTML = ""
 })
 
 // Search results
@@ -74,6 +88,10 @@ search_container.appendChild(search_results)
 
 shadow.appendChild(search_container)
 document.body.appendChild(shadow_container)
+
+// 
+// Logic
+//
 
 // Constants
 const BOOKMARK = "bookmark";
@@ -103,15 +121,25 @@ function render_results() {
     global_results.forEach((b, i) => {
         let result = document.createElement("div")
         result.id = "search-result"
-        result.textContent = b.name
         if (focused_element === i) {
             result.setAttribute("active", "true")
         }
         search_results.appendChild(result)
+
+        let title = document.createElement("div")
+        title.id = "search-title"
+        title.textContent = b.name
+        result.appendChild(title)
+
+        if (global_source == HISTORY) {
+            let url = document.createElement("div")
+            url.id = "search-url"
+            url.textContent = b.url
+            result.appendChild(url)
+        }
     })
     search_results.hidden = global_results.length == 0
 }
-
 
 // Open search listener
 document.addEventListener("keydown", (e) => {
