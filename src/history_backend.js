@@ -24,4 +24,10 @@ function index_history() {
     )
 }
 
+// Inital parse
 index_history()
+
+// Parse on updated history
+chrome.history.onVisited.addListener((_item) => {
+    index_history()
+})

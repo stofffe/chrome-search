@@ -77,6 +77,7 @@ search_input.addEventListener("focusout", () => {
 // Search results
 let search_results = document.createElement("div")
 search_results.id = "search-results"
+search_results.hidden = true
 let focused_element = 0
 
 // Search container
@@ -223,6 +224,3 @@ search_input.addEventListener("keypress", (e) => {
     e.stopPropagation()
     e.stopImmediatePropagation()
 })
-
-// Initally filter with empty string
-// filter_bookmarks("", "")
