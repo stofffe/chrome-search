@@ -33,16 +33,9 @@ index_bookmarks()
 chrome.bookmarks.onChanged.addListener((_id, _info) => {
     index_bookmarks()
 })
-chrome.bookmarks.onChildrenReordered.addListener((_id, _info) => {
-    index_bookmarks()
-})
 chrome.bookmarks.onCreated.addListener((_id, _info) => {
-    index_bookmarks()
-})
-chrome.bookmarks.onMoved.addListener((_id, _info) => {
     index_bookmarks()
 })
 chrome.bookmarks.onRemoved.addListener((_id, _info) => {
     index_bookmarks()
 })
-
